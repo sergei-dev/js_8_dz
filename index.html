@@ -5,6 +5,7 @@
 	<title>FATCH</title>
 	<link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" id="link_theme">
 </head>
 <body>
 	<main id="wrapper">
@@ -21,10 +22,25 @@
 				<button id="btn_rated">Top rated</button>
 			</div>
 		</div>
+		<div class="button_group_themes">
+			<h2>Theme:</h2>
+			<button id="light" data-themePath="css/light-theme.css">LIGTH</button>
+			<button id="dark" data-themePath="css/dark-theme.css">DARK</button>
+		</div>
 		<div class="gallery_card">
 			<div class="gallery_movies"></div>
 		</div>
 	</main>
+	<script type="text/template" id="card">
+		<div class="movie_item">
+			<div class="movie_poster"><img src='<%- poster %>' alt="movie poster"></div>
+			<div class="movie_title"><h2><%- title %></h2></div>
+			<div class="movie_overview"><%- overview %></div>
+			<div class="movie_date">Release date: <%- date %></div>
+			<div class="movie_popularity">Rated: <%- popularity %></div>				
+		</div>
+	</script>
+	<script src='https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js'></script>
 	<script src="js/main.js"></script>
 </body>
 </html>

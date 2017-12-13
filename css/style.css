@@ -4,7 +4,6 @@
     box-sizing: border-box;
 }
 body {
-    background: #0c161e;
     font-family: Arial, Helvetica, sans-serif;
     color: #0c161e;
 }
@@ -36,8 +35,7 @@ body {
 .button_group {
     width: 60%;
 }
-.button_group button {
-    color: #0c161e;
+button {
     background: #e2b100;
     padding: 10px 15px;
     border-radius: 7px;
@@ -47,8 +45,9 @@ body {
     text-transform: uppercase;
     margin-right: 15px;
     cursor: pointer;
+    outline: none;
 }
-.button_group button:hover {
+button:hover {
     background: #3f51b5;
     color: #ffffff;
 }
@@ -77,12 +76,20 @@ body {
     justify-content: space-between;
     flex-wrap: wrap;
 }
+.button_group_themes {
+    margin-bottom: 20px;
+}
 .movie_item {
     width: 32%;
     padding: 15px;
     background: #ffffff;
     border-radius: 6px;
     margin-bottom: 20px;
+    box-shadow: 0 0 3px 2px #000;
+    color: #0c161e;
+}
+.active {
+    box-shadow: 0 0 5px 5px #3f51b5;
 }
 .movie_poster {
     text-align: center;
@@ -113,10 +120,10 @@ body {
     .app_form,
     .search_inp,
     .button_group,
-    .button_group button {
+    button {
         width: 100%;
     }
-    .button_group button,
+    button,
     .app_form {
         margin-bottom: 20px;
     }

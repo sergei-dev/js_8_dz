@@ -1,11 +1,15 @@
-window.onload = () => {
-	const moviesCardList = document.querySelector('.gallery_movies');
+	const head  = document.querySelector('head');
+	const btn_ligth = document.querySelector('#light');
+	const btn_dark = document.querySelector('#dark');
+	const btn_group_themes = document.querySelector('.button_group_themes');
 	const form = document.querySelector('#form');
 	const inp_search = document.querySelector('#inp_search');
 	const group_btn = document.querySelector('.button_group');
 	const popular = document.querySelector('#btn_popular');
 	const latest = document.querySelector('#btn_popular');
 	const rated = document.querySelector('#btn_rated');
+	const moviesCardList = document.querySelector('.gallery_movies');
+	let movies = '';
 	const getMoviesCard = (searchQuery, url) => {
 		const page = 1;
 		const year = 2017;
@@ -23,22 +27,85 @@ window.onload = () => {
 			throw new Error('error' + response.statusText);
 		})
 		.then(data => {
-			const movies = data.results;
-			let html = '';
-			movies.forEach(movie => {
-				html += `<div class="movie_item">
-				<div class="movie_poster"><img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="movie poster"></div>
-				<div class="movie_title"><h2>${movie.title}</h2></div>
-				<div class="movie_overview">${movie.overview}</div>
-				<div class="movie_date">Release date: ${movie.release_date}</div>
-				<div class="movie_popularity">Rated: ${movie.popularity}</div>				
-			</div>`;
-			moviesCardList.innerHTML = html;
-			
+			const movie = data.results.map(item => {
+				return {
+						poster: 'https://image.tmdb.org/t/p/w500' + item.poster_path,
+						title: item.title,
+						overview: item.overview,
+						date: item.release_date,
+						popularity: item.popularity
+				}
 			});
+			const card = document.querySelector('#card').textContent.trim();
+			const compiled = _.template(card);
+			let html = '';
+			movie.forEach(item => {
+				html += compiled(item);
+				moviesCardList.innerHTML = html;
+			});		
 		})
 		.catch(err => console.log(err));
 	}
+
+	const theme_key = 'theme';
+	const link_theme  = document.querySelector('#link_theme');
+	let currentStylePath = link_theme.getAttribute('href');
+
+	const setThemes = (themePath) => {
+		link_theme.setAttribute('href', themePath);
+		currentStylePath = themePath;
+	}
+	const setSettings = (key, value) => {
+		if ('localStorage' in window && window['localStorage'] !== null) {
+			try {
+				localStorage.setItem(key, value);
+			} catch (e) {
+				// if (e == QUOTA_EXCEEDED_ERR) {
+				//     alert('Переполнение хранилища!');
+				// }
+			}
+		} else {
+			alert('Данные не сохранятся, ваш браузер не поддерживает Localstorage');
+		}
+	};
+	const getSettings = (key) => {
+		if ('localStorage' in window && window['localStorage'] !== null) {
+			return localStorage.getItem(key);
+		} else {
+			alert('Данные не восстановлены! Вваш браузер не поддерживает Localstorage');
+			return null;
+		}
+	} 
+
+	document.addEventListener("DOMContentLoaded", () => {
+		const currentThemePath = getSettings(theme_key);
+		if(currentThemePath !== null){
+			setThemes(currentThemePath);
+		}
+	});
+
+	btn_group_themes.onclick = (event) => {
+		let target = event.target;
+		const themePath = target.getAttribute('data-themePath');
+		if(target.id == 'light') {
+			setSettings(theme_key, themePath);
+			setThemes(themePath);
+			btn_dark.classList.remove('active');
+			btn_ligth.classList.add('active');
+		}
+		else if(target.id == 'dark') {
+			setSettings(theme_key, themePath);
+			setThemes(themePath);
+			btn_ligth.classList.remove('active');
+			btn_dark.classList.add('active');
+			
+		}
+		
+	}
+
+	
+	
+	
 
 	group_btn.onclick = (event) => {
 		event.preventDefault();
@@ -56,7 +123,12 @@ window.onload = () => {
 	
 	form.onsubmit = (event) => {
 		event.preventDefault();
-		getMoviesCard(inp_search.value, 'https://api.themoviedb.org/3/search/movie?');
+		if(inp_search.value == '') {
+			alert('Ты дурак');
+		}
+		else {
+			getMoviesCard(inp_search.value, 'https://api.themoviedb.org/3/search/movie?');
+		}
 		
 	}
-}
+	
